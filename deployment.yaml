@@ -1,0 +1,32 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  namespace: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: nodejs-app
+        image: onkarpasrichaa/nodejs
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_HOST
+          value: mysql-service.database.svc.cluster.local
+        - name: DATABASE_USER
+          value: mysql
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+
